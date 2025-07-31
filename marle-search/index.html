@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marle | Dark Search Engine</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --deep-dark: #070707;
+            --dark-bg: #0f0f0f;
+            --card-bg: #1a1a1a;
+            --accent: #800;
+            --accent-light: #c00;
+            --accent-glow: rgba(200, 0, 0, 0.5);
+            --text: #e0e0e0;
+            --text-light: #aaa;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        
+        body {
+            background: var(--deep-dark);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            color: var(--text);
+            overflow: hidden;
+            position: relative;
+            border: 3px solid var(--accent);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 30px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* Header */
+        header {
+            margin-bottom: 40px;
+            padding-top: 20px;
+            position: relative;
+        }
+        
+        .logo-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 5.5rem;
+            font-weight: 800;
+            color: #300;
+            text-shadow: 0 0 20px var(--accent), 
+                         0 0 40px var(--accent-light),
+                         0 0 60px var(--accent-glow);
+            letter-spacing: -4px;
+            font-family: 'Arial Black', sans-serif;
+            cursor: default;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+        
+        .logo:hover {
+            transform: scale(1.02);
+            text-shadow: 0 0 25px var(--accent), 
+                         0 0 50px var(--accent-light),
+                         0 0 80px var(--accent-glow);
+        }
+        
+        .logo-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 250px;
+            height: 250px;
+            background: radial-gradient(circle, rgba(128,0,0,0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            z-index: 1;
+            filter: blur(20px);
+        }
+        
+        .tagline {
+            color: var(--text-light);
+            font-size: 1.3rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-weight: 300;
+            margin-top: -10px;
+            position: relative;
+        }
+        
+        /* Search Area */
+        .search-section {
+            max-width: 900px;
+            margin: 0 auto 50px;
+            position: relative;
+        }
+        
+        .search-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .search-box {
+            width: 100%;
+            padding: 22px 35px;
+            font-size: 1.3rem;
+            background: rgba(15, 15, 15, 0.8);
+            border: 2px solid var(--accent);
+            border-radius: 60px;
+            color: var(--text);
+            outline: none;
+            transition: var(--transition);
+            box-shadow: 0 0 20px rgba(128, 0, 0, 0.3);
+            padding-right: 200px;
+        }
+        
+        .search-box:focus {
+            border-color: var(--accent-light);
+            box-shadow: 0 0 40px rgba(200, 0, 0, 0.6);
+        }
+        
+        .search-btn {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            background: linear-gradient(135deg, var(--accent) 0%, #600 100%);
+            color: var(--text);
+            border: none;
+            border-radius: 50px;
+            padding: 14px 40px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(128, 0, 0, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .search-btn:hover {
+            background: linear-gradient(135deg, #a00 0%, #800 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(200, 0, 0, 0.6);
+        }
+        
+        .voice-search {
+            position: absolute;
+            right: 180px;
+            top: 18px;
+            background: transparent;
+            border: none;
+            color: var(--accent);
+            font-size: 1.4rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        
+        .voice-search:hover {
+            color: var(--accent-light);
+            background: rgba(128, 0, 0, 0.2);
+            transform: scale(1.1);
+        }
+        
+        /* Engine Selector */
+        .engine-selector {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+        }
+        
+        .engine-btn {
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--text-light);
+            padding: 12px 25px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 140px;
+            justify-content: center;
+        }
+        
+        .engine-btn:hover {
+            background: rgba(60, 0, 0, 0.4);
+            color: var(--text);
+            border-color: var(--accent-light);
+        }
+        
+        .engine-btn.active {
+            background: linear-gradient(135deg, var(--accent) 0%, #600 100%);
+            color: #fff;
+            border-color: var(--accent-light);
+            box-shadow: 0 5px 15px rgba(128, 0, 0, 0.4);
+            transform: translateY(-3px);
+        }
+        
+        .engine-icon {
+            font-size: 1.3rem;
+        }
+        
+        /* Features */
+        .features-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+        
+        .feature-card {
+            background: linear-gradient(145deg, rgba(26, 26, 26, 0.8), rgba(20, 20, 20, 0.9));
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 30px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(128,0,0,0.1) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 15px 35px rgba(128, 0, 0, 0.3);
+            border-color: var(--accent-light);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 25px;
+            color: var(--accent-light);
+            background: rgba(60, 0, 0, 0.2);
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            margin: 0 auto 25px;
+        }
+        
+        .feature-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent-light);
+            font-weight: 600;
+        }
+        
+        .feature-desc {
+            font-size: 1rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+        
+        .feature-link {
+            color: var(--accent-light);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: var(--transition);
+        }
+        
+        .feature-link:hover {
+            color: #fff;
+            gap: 12px;
+        }
+        
+        /* Advanced Options */
+        .advanced-options {
+            background: rgba(20, 20, 20, 0.8);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        
+        .options-title {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--accent-light);
+            text-align: center;
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .option-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: rgba(40, 40, 40, 0.5);
+            border-radius: 15px;
+            transition: var(--transition);
+            cursor: pointer;
+        }
+        
+        .option-item:hover {
+            background: rgba(60, 0, 0, 0.3);
+            transform: translateY(-5px);
+        }
+        
+        .option-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--accent-light);
+        }
+        
+        .option-label {
+            font-size: 1rem;
+            color: var(--text);
+            font-weight: 500;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 50px;
+            padding: 30px;
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(80, 0, 0, 0.3);
+            position: relative;
+            z-index: 10;
+        }
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .footer-link {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            position: relative;
+            padding-bottom: 5px;
+        }
+        
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-light);
+            transition: var(--transition);
+        }
+        
+        .footer-link:hover {
+            color: #fff;
+        }
+        
+        .footer-link:hover::after {
+            width: 100%;
+        }
+        
+        .copyright {
+            margin-top: 10px;
+            font-size: 0.85rem;
+            opacity: 0.7;
+        }
+        
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(200, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(200, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(200, 0, 0, 0); }
+        }
+        
+        .feature-card {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        .feature-card:nth-child(2) {
+            animation-delay: 1s;
+        }
+        
+        .feature-card:nth-child(3) {
+            animation-delay: 2s;
+        }
+        
+        .voice-search {
+            animation: pulse 2s infinite;
+        }
+        
+        /* Loader */
+        .loader {
+            display: none;
+            width: 50px;
+            height: 50px;
+            margin: 30px auto;
+            position: relative;
+        }
+        
+        .loader-dot {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .loader-dot::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 12px;
+            height: 12px;
+            background: var(--accent-light);
+            border-radius: 50%;
+            animation: loader 1.2s infinite;
+        }
+        
+        .loader-dot:nth-child(1)::before {
+            animation-delay: 0s;
+            background: var(--accent-light);
+        }
+        
+        .loader-dot:nth-child(2)::before {
+            animation-delay: -0.4s;
+            background: #c00;
+        }
+        
+        .loader-dot:nth-child(3)::before {
+            animation-delay: -0.8s;
+            background: #f00;
+        }
+        
+        @keyframes loader {
+            0%, 100% { transform: scale(0); }
+            50% { transform: scale(1); }
+        }
+        
+        /* Suggestions */
+        .suggestions-container {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            width: 100%;
+            background: rgba(26, 26, 26, 0.95);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            padding: 20px;
+            z-index: 100;
+            display: none;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        
+        .suggestion-item {
+            padding: 12px 20px;
+            text-align: left;
+            cursor: pointer;
+            transition: var(--transition);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .suggestion-item:hover {
+            background: rgba(80, 0, 0, 0.3);
+        }
+        
+        .suggestion-icon {
+            color: var(--accent-light);
+            font-size: 1.2rem;
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .logo {
+                font-size: 4.5rem;
+            }
+            
+            .search-box {
+                padding: 18px 25px;
+                padding-right: 170px;
+                font-size: 1.1rem;
+            }
+            
+            .search-btn {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+            
+            .voice-search {
+                right: 160px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .logo {
+                font-size: 3.8rem;
+                letter-spacing: -3px;
+            }
+            
+            .logo-bg {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .search-box {
+                padding-right: 140px;
+            }
+            
+            .search-btn {
+                padding: 10px 25px;
+            }
+            
+            .voice-search {
+                right: 130px;
+                top: 15px;
+            }
+            
+            .engine-btn {
+                min-width: 120px;
+                padding: 10px 15px;
+            }
+            
+            .feature-card {
+                padding: 25px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .logo {
+                font-size: 3rem;
+            }
+            
+            .search-box {
+                padding: 15px 20px;
+                padding-right: 110px;
+            }
+            
+            .search-btn {
+                padding: 8px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .voice-search {
+                right: 100px;
+                top: 13px;
+                font-size: 1.2rem;
+            }
+            
+            .engine-btn {
+                min-width: 100px;
+                font-size: 0.9rem;
+                padding: 8px 12px;
+            }
+        }
+        
+        /* Fullscreen Button */
+        .fullscreen-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid var(--accent);
+            color: var(--text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 20;
+        }
+        
+        .fullscreen-btn:hover {
+            background: rgba(80, 0, 0, 0.4);
+            color: var(--text);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="fullscreen-btn" id="fullscreenBtn">
+            <i class="fas fa-expand"></i>
+        </div>
+        
+        <header>
+            <div class="logo-container">
+                <div class="logo">MARLE</div>
+                <div class="logo-bg"></div>
+            </div>
+            <div class="tagline">PREMIUM DARK SEARCH EXPERIENCE</div>
+        </header>
+        
+        <main>
+            <div class="search-section">
+                <div class="search-container">
+                    <input 
+                        type="text" 
+                        class="search-box" 
+                        placeholder="Search the dark web..."
+                        autofocus
+                        id="searchInput"
+                    >
+                    <button class="voice-search" id="voiceBtn">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i> Search
+                    </button>
+                    <div class="suggestions-container" id="suggestions"></div>
+                </div>
+                
+                <div class="loader" id="loader">
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                    <div class="loader-dot"></div>
+                </div>
+                
+                <div class="engine-selector">
+                    <div class="engine-btn active" data-engine="google">
+                        <i class="fab fa-google engine-icon"></i> Google
+                    </div>
+                    <div class="engine-btn" data-engine="youtube">
+                        <i class="fab fa-youtube engine-icon"></i> YouTube
+                    </div>
+                    <div class="engine-btn" data-engine="wikipedia">
+                        <i class="fab fa-wikipedia-w engine-icon"></i> Wikipedia
+                    </div>
+                    <div class="engine-btn" data-engine="github">
+                        <i class="fab fa-github engine-icon"></i> GitHub
+                    </div>
+                    <div class="engine-btn" data-engine="amazon">
+                        <i class="fab fa-amazon engine-icon"></i> Amazon
+                    </div>
+                    <div class="engine-btn" data-engine="duckduckgo">
+                        <i class="fas fa-search engine-icon"></i> DuckDuckGo
+                    </div>
+                </div>
+            </div>
+            
+            <div class="features-section">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3 class="feature-title">Quantum Search</h3>
+                    <p class="feature-desc">Our revolutionary algorithm searches across dimensions, delivering results before you even finish typing.</p>
+                    <a href="#" class="feature-link">Learn more <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-user-ninja"></i>
+                    </div>
+                    <h3 class="feature-title">Stealth Mode</h3>
+                    <p class="feature-desc">Leave no digital footprint. Our military-grade encryption ensures complete anonymity.</p>
+                    <a href="#" class="feature-link">Privacy tools <i class="fas fa-arrow-right"></i></a>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3 class="feature-title">AI Assistant</h3>
+                    <p class="feature-desc">Our neural network understands context, emotion, and intent for truly intelligent results.</p>
+                    <a href="#" class="feature-link">Try AI search <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+            
+            <div class="advanced-options">
+                <h3 class="options-title">Advanced Search Tools</h3>
+                <div class="options-grid">
+                    <div class="option-item" id="imageSearch">
+                        <i class="fas fa-image option-icon"></i>
+                        <span class="option-label">Image Search</span>
+                    </div>
+                    <div class="option-item" id="videoSearch">
+                        <i class="fas fa-video option-icon"></i>
+                        <span class="option-label">Video Search</span>
+                    </div>
+                    <div class="option-item" id="newsSearch">
+                        <i class="fas fa-newspaper option-icon"></i>
+                        <span class="option-label">News Search</span>
+                    </div>
+                    <div class="option-item" id="mapSearch">
+                        <i class="fas fa-map-marked-alt option-icon"></i>
+                        <span class="option-label">Maps</span>
+                    </div>
+                    <div class="option-item" id="bookSearch">
+                        <i class="fas fa-book option-icon"></i>
+                        <span class="option-label">Books</span>
+                    </div>
+                    <div class="option-item" id="scholarSearch">
+                        <i class="fas fa-graduation-cap option-icon"></i>
+                        <span class="option-label">Scholar</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <footer>
+            <div class="footer-links">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Advanced Settings</a>
+                <a href="#" class="footer-link">Dark Web Access</a>
+                <a href="#" class="footer-link">API Documentation</a>
+                <a href="#" class="footer-link">Contact Support</a>
+            </div>
+            <div class="copyright">
+                &copy; 2023 MARLE PREMIUM SEARCH | Press F11 for immersive experience | v4.2.1
+            </div>
+        </footer>
+    </div>
+    
+    <script>
+        // Search engine selection
+        let currentEngine = 'google';
+        const engineButtons = document.querySelectorAll('.engine-btn');
+        
+        engineButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                engineButtons.forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentEngine = this.dataset.engine;
+                updateEngineIcon();
+            });
+        });
+        
+        // Update search button icon based on engine
+        function updateEngineIcon() {
+            const icons = {
+                'google': 'fab fa-google',
+                'youtube': 'fab fa-youtube',
+                'wikipedia': 'fab fa-wikipedia-w',
+                'github': 'fab fa-github',
+                'amazon': 'fab fa-amazon',
+                'duckduckgo': 'fas fa-search'
+            };
+            
+            const iconElement = document.querySelector('#searchBtn i');
+            iconElement.className = icons[currentEngine] || 'fas fa-search';
+        }
+        
+        // Voice search simulation
+        document.getElementById('voiceBtn').addEventListener('click', function() {
+            const searchInput = document.getElementById('searchInput');
+            searchInput.value = "Searching by voice...";
+            
+            // Simulate voice recognition
+            setTimeout(() => {
+                const commands = [
+                    "dark web security",
+                    "red-black design patterns",
+                    "anonymous browsing tools",
+                    "Marle search features",
+                    "advanced privacy techniques"
+                ];
+                const randomCommand = commands[Math.floor(Math.random() * commands.length)];
+                searchInput.value = randomCommand;
+            }, 2000);
+        });
+        
+        // Search function with advanced features
+        function performSearch() {
+            const query = document.getElementById('searchInput').value.trim();
+            if (!query) return;
+            
+            const loader = document.getElementById('loader');
+            loader.style.display = 'flex';
+            
+            // Save to search history
+            saveToHistory(query);
+            
+            // Simulate AI processing
+            setTimeout(() => {
+                let searchUrl;
+                
+                switch(currentEngine) {
+                    case 'google':
+                        searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                        break;
+                    case 'youtube':
+                        searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+                        break;
+                    case 'wikipedia':
+                        searchUrl = `https://en.wikipedia.org/w/index.php?search=${encodeURIComponent(query)}`;
+                        break;
+                    case 'github':
+                        searchUrl = `https://github.com/search?q=${encodeURIComponent(query)}`;
+                        break;
+                    case 'amazon':
+                        searchUrl = `https://www.amazon.com/s?k=${encodeURIComponent(query)}`;
+                        break;
+                    case 'duckduckgo':
+                        searchUrl = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+                        break;
+                    default:
+                        searchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+                }
+                
+                window.open(searchUrl, '_blank');
+                loader.style.display = 'none';
+            }, 1200);
+        }
+        
+        // Save to search history
+        function saveToHistory(query) {
+            let history = JSON.parse(localStorage.getItem('marleSearchHistory')) || [];
+            
+            history.unshift({
+                query: query,
+                engine: currentEngine,
+                timestamp: new Date().toISOString()
+            });
+            
+            if (history.length > 100) {
+                history = history.slice(0, 100);
+            }
+            
+            localStorage.setItem('marleSearchHistory', JSON.stringify(history));
+        }
+        
+        // Autocomplete and suggestions
+        const searchInput = document.getElementById('searchInput');
+        const suggestionsContainer = document.getElementById('suggestions');
+        
+        searchInput.addEventListener('input', function() {
+            const query = this.value.trim();
+            
+            if (query.length > 1) {
+                const suggestions = generateSuggestions(query);
+                displaySuggestions(suggestions);
+            } else {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+        
+        searchInput.addEventListener('focus', function() {
+            if (this.value.trim().length > 1) {
+                const suggestions = generateSuggestions(this.value);
+                displaySuggestions(suggestions);
+            }
+            
+            // Show recent searches
+            const history = JSON.parse(localStorage.getItem('marleSearchHistory')) || [];
+            if (history.length > 0 && this.value === '') {
+                displayHistory(history);
+            }
+        });
+        
+        function generateSuggestions(query) {
+            const baseSuggestions = [
+                "dark web security",
+                "red-black design patterns",
+                "anonymous browsing tools",
+                "Marle search features",
+                "advanced privacy techniques",
+                "dark mode UI design",
+                "cryptography for beginners",
+                "neural search algorithms",
+                "quantum computing search",
+                "zero-knowledge proof systems"
+            ];
+            
+            return baseSuggestions.filter(item => 
+                item.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 8);
+        }
+        
+        function displaySuggestions(suggestions) {
+            if (suggestions.length === 0) {
+                suggestionsContainer.style.display = 'none';
+                return;
+            }
+            
+            let html = '';
+            suggestions.forEach(suggestion => {
+                html += `
+                    <div class="suggestion-item" data-query="${suggestion}">
+                        <i class="fas fa-search suggestion-icon"></i>
+                        <span>${suggestion}</span>
+                    </div>
+                `;
+            });
+            
+            suggestionsContainer.innerHTML = html;
+            suggestionsContainer.style.display = 'block';
+            
+            // Add click event to suggestions
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    searchInput.value = this.dataset.query;
+                    suggestionsContainer.style.display = 'none';
+                    performSearch();
+                });
+            });
+        }
+        
+        function displayHistory(history) {
+            let html = '<div class="suggestion-item" style="color: #c00; font-weight: 600;">Recent Searches:</div>';
+            
+            history.slice(0, 5).forEach(item => {
+                html += `
+                    <div class="suggestion-item" data-query="${item.query}">
+                        <i class="fas fa-history suggestion-icon"></i>
+                        <span>${item.query}</span>
+                        <span style="margin-left: auto; font-size: 0.8rem; color: #666;">${item.engine}</span>
+                    </div>
+                `;
+            });
+            
+            suggestionsContainer.innerHTML = html;
+            suggestionsContainer.style.display = 'block';
+            
+            // Add click event to history items
+            document.querySelectorAll('.suggestion-item[data-query]').forEach(item => {
+                item.addEventListener('click', function() {
+                    searchInput.value = this.dataset.query;
+                    suggestionsContainer.style.display = 'none';
+                    performSearch();
+                });
+            });
+        }
+        
+        // Close suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!suggestionsContainer.contains(e.target) && e.target !== searchInput) {
+                suggestionsContainer.style.display = 'none';
+            }
+        });
+        
+        // Event listeners
+        document.getElementById('searchBtn').addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                suggestionsContainer.style.display = 'none';
+                performSearch();
+            }
+        });
+        
+        // Advanced search options
+        document.querySelectorAll('.option-item').forEach(option => {
+            option.addEventListener('click', function() {
+                const optionId = this.id;
+                alert(`Advanced search: ${this.querySelector('.option-label').textContent}\nThis would open specialized search for this category.`);
+            });
+        });
+        
+        // Fullscreen functionality
+        const fullscreenBtn = document.getElementById('fullscreenBtn');
+        
+        fullscreenBtn.addEventListener('click', function() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error attempting to enable fullscreen: ${err.message}`);
+                });
+                this.innerHTML = '<i class="fas fa-compress"></i>';
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                    this.innerHTML = '<i class="fas fa-expand"></i>';
+                }
+            }
+        });
+        
+        document.addEventListener('fullscreenchange', function() {
+            if (!document.fullscreenElement) {
+                fullscreenBtn.innerHTML = '<i class="fas fa-expand"></i>';
+            }
+        });
+        
+        // Initialize
+        updateEngineIcon();
+        
+        // Focus on search input on load
+        window.onload = function() {
+            document.getElementById('searchInput').focus();
+        };
+    </script>
+</body>
+</html>
